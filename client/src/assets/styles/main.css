@@ -1,0 +1,204 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --paper: #faf7f2;
+    --edge-rest: #e5e5e5;
+    --edge-glow: #319b82;
+    --tt-caret: #319b82;
+  }
+
+  .dark {
+    --paper: #121214;
+    --edge-rest: #262626;
+    --edge-glow: #3ec3a3;
+    --tt-caret: #3ec3a3;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 4.5rem;
+  }
+
+  body {
+    @apply bg-[color:var(--paper)] font-sans text-neutral-700 antialiased transition-colors duration-300 dark:text-neutral-200;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  ::selection {
+    background-color: #319b82;
+    color: #ffffff;
+  }
+  .dark ::selection {
+    background-color: #3ec3a3;
+    color: #0a0a0a;
+  }
+
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #f0f0f0;
+  }
+  .dark ::-webkit-scrollbar-track {
+    background: #171717;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    border: 3px solid var(--paper);
+    background: linear-gradient(180deg, #3ec3a3 0%, #267b66 100%);
+  }
+
+  :focus-visible {
+    outline-width: 2px;
+    outline-style: solid;
+    outline-offset: 3px;
+    outline-color: #319b82;
+  }
+  .dark :focus-visible {
+    outline-color: #3ec3a3;
+  }
+}
+
+@layer components {
+  /* Fixed film-grain overlay — painted over everything, never intercepts clicks */
+  .bg-grain {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0.12;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
+  }
+  .dark .bg-grain {
+    opacity: 0.11;
+  }
+
+  /* Mono uppercase section eyebrow label */
+  .mono-label {
+    font-family: theme('fontFamily.mono');
+    font-size: 11px;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+
+  /* Monospace brand name */
+  .brand-name {
+    font-family: theme('fontFamily.mono');
+    font-weight: 400;
+    letter-spacing: -0.03em;
+  }
+
+  /* Blinking typewriter caret */
+  .tt-caret {
+    display: inline-block;
+    width: 1px;
+    margin-left: 3px;
+    box-shadow: -1px 0 0 0 var(--tt-caret);
+    animation: tt-blink 1s step-end infinite;
+  }
+}
+
+@keyframes tt-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@layer utilities {
+  .skeleton {
+    @apply animate-pulse rounded-md bg-paper-200 dark:bg-paper-800;
+  }
+
+  /* Animated underline used by nav + inline links */
+  .link-underline {
+    @apply relative;
+  }
+  .link-underline::after {
+    content: '';
+    @apply absolute inset-x-0 -bottom-1 h-px origin-left scale-x-0 bg-current transition-transform duration-300 ease-out;
+  }
+  .link-underline:hover::after,
+  .link-underline.is-active::after {
+    @apply scale-x-100;
+  }
+
+  /* Scroll-reveal (driven by v-reveal directive) */
+  .reveal {
+    opacity: 0;
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.up {
+    transform: translateY(26px);
+  }
+  .reveal.left {
+    transform: translateX(-28px);
+  }
+  .reveal.right {
+    transform: translateX(28px);
+  }
+  .reveal.scale {
+    transform: scale(0.96);
+  }
+  .reveal.is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+
+  .delay-100 {
+    transition-delay: 100ms;
+  }
+  .delay-200 {
+    transition-delay: 200ms;
+  }
+  .delay-300 {
+    transition-delay: 300ms;
+  }
+
+  /* Skill bars grow once their card scrolls into view (v-reveal) */
+  .skill-fill {
+    width: 0;
+    transition: width 1s cubic-bezier(0.22, 1, 0.36, 1) 0.15s;
+  }
+  .is-revealed .skill-fill {
+    width: var(--level);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .reveal.up,
+    .reveal.left,
+    .reveal.right,
+    .reveal.scale {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    html {
+      scroll-behavior: auto;
+    }
+    .tt-caret {
+      animation: none;
+    }
+  }
+}
