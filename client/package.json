@@ -32,7 +32,7 @@
     "pinia": "^2.3.1",
     "vee-validate": "^4.14.7",
     "vue": "^3.5.12",
-    "vue-filepond": "^7.0.4",
+    "vue-filepond": "^8.0.0",
     "vue-router": "^4.4.5",
     "vue3-apexcharts": "^1.11.1",
     "yup": "^1.4.0"
