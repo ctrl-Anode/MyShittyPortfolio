@@ -12,7 +12,14 @@ export function validate(schemas) {
         const result = schema.safeParse(req[part]);
         if (result.success) {
           if (part === 'body') req.body = result.data;
-          if (part === 'query') req.query = result.data;
+          if (part === 'query') {
+            Object.defineProperty(req, 'query', {
+              value: result.data,
+              writable: true,
+              configurable: true,
+              enumerable: true
+            });
+          }
         } else {
           const fields = {};
           for (const issue of result.error.issues) {

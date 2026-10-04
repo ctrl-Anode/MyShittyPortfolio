@@ -2,6 +2,7 @@ FROM node:20-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma
+COPY prisma.config.mjs ./
 RUN npm ci
 COPY src ./src
 RUN npx prisma generate
@@ -12,6 +13,7 @@ RUN apk add --no-cache curl
 WORKDIR /app
 COPY --from=build /app/node_modules ./node_modules
 COPY --from=build /app/prisma ./prisma
+COPY --from=build /app/prisma.config.mjs ./
 COPY --from=build /app/src ./src
 COPY package*.json ./
 RUN mkdir -p /app/storage && chown -R node:node /app/storage
